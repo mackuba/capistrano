@@ -51,12 +51,12 @@ _cset(:strategy)          { Minestrone::Deploy::Strategy.new(deploy_via, self) }
 # If overriding release name, please also select an appropriate setting for :releases below.
 _cset(:release_name)      { set :deploy_timestamped, true; Time.now.utc.strftime("%Y%m%d%H%M%S") }
 
-_cset :version_dir,       "releases"
+_cset :releases_dir,      "releases"
 _cset :shared_dir,        "shared"
 _cset :shared_children,   %w(public/system log tmp/pids)
 _cset :current_dir,       "current"
 
-_cset(:releases_path)     { File.join(deploy_to, version_dir) }
+_cset(:releases_path)     { File.join(deploy_to, releases_dir) }
 _cset(:shared_path)       { File.join(deploy_to, shared_dir) }
 _cset(:current_path)      { File.join(deploy_to, current_dir) }
 _cset(:release_path)      { File.join(releases_path, release_name) }
