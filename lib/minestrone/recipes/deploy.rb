@@ -32,7 +32,7 @@ _cset :deploy_via, :remote_cache
 _cset(:deploy_to) { "/var/www/#{application}" }
 _cset(:revision)  { source.head }
 
-_cset :rails_env, "production"
+_cset :rack_env, "production"
 _cset :rake, "rake"
 
 _cset :keep_releases, 5
@@ -107,6 +107,15 @@ def with_env(name, value)
   yield
 ensure
   ENV[name] = saved
+end
+
+def r_env
+  if rails_env = fetch(:rails_env, nil)
+    "RAILS_ENV=#{rails_env.to_s.shellescape}"
+  else
+    rack_env = fetch(:rack_env, "production")
+    "RACK_ENV=#{rack_env.to_s.shellescape}"
+  end
 end
 
 # Logs the command then executes it locally. Returns the command output as a string.
@@ -418,14 +427,13 @@ namespace :deploy do
     rake executable by setting the rake variable. The defaults are:
 
       set :rake,           "rake"
-      set :rails_env,      "production"
+      set :rack_env,       "production"
       set :migrate_env,    ""
       set :migrate_target, :latest
   DESC
 
   task :migrate do
     rake = fetch(:rake, "rake")
-    rails_env = fetch(:rails_env, "production")
     migrate_env = fetch(:migrate_env, "")
     migrate_target = fetch(:migrate_target, :latest)
 
@@ -435,7 +443,7 @@ namespace :deploy do
       else raise ArgumentError, "unknown migration target #{migrate_target.inspect}"
     end
 
-    run "cd #{directory} && #{rake} RAILS_ENV=#{rails_env} #{migrate_env} db:migrate"
+    run "cd #{directory} && #{r_env} #{migrate_env} #{rake} db:migrate"
   end
 
   desc <<-DESC

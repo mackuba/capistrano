@@ -57,13 +57,12 @@ namespace :deploy do
       asset_env variable. The defaults are:
 
         set :rake,      "rake"
-        set :rails_env, "production"
+        set :rack_env,  "production"
         set :asset_env, "RAILS_GROUPS=assets"
     DESC
     task :precompile do
       run <<-CMD.compact
-        cd -- #{latest_release} && 
-        RAILS_ENV=#{rails_env.to_s.shellescape} #{asset_env} #{rake} assets:precompile
+        cd -- #{latest_release} && #{r_env} #{asset_env} #{rake} assets:precompile
       CMD
 
       if capture("ls -1 #{shared_path.shellescape}/#{shared_assets_prefix}/#{asset_manifest_prefix}* | wc -l").to_i > 1
@@ -112,11 +111,11 @@ namespace :deploy do
       asset_env variable. The defaults are:
 
         set :rake,      "rake"
-        set :rails_env, "production"
+        set :rack_env,  "production"
         set :asset_env, "RAILS_GROUPS=assets"
     DESC
     task :clean do
-      run "cd #{latest_release} && #{rake} RAILS_ENV=#{rails_env} #{asset_env} assets:clean"
+      run "cd #{latest_release} && #{rake} #{r_env} #{asset_env} assets:clean"
     end
 
     desc <<-DESC
@@ -186,7 +185,7 @@ namespace :deploy do
         run <<-CMD.compact
           cd -- #{previous_release.shellescape} &&
           cp -f -- #{previous_manifest.shellescape} #{restored_manifest_path.shellescape} &&
-          [ -z "$(#{rake} -P | grep assets:precompile:nondigest)" ] || #{rake} RAILS_ENV=#{rails_env.to_s.shellescape} #{asset_env} assets:precompile:nondigest
+          [ -z "$(#{rake} -P | grep assets:precompile:nondigest)" ] || #{rake} #{r_env} #{asset_env} assets:precompile:nondigest
         CMD
       end
     end
