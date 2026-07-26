@@ -34,6 +34,8 @@ module Minestrone
           end
         end
 
+        alias upload_file upload
+
         def download(from, to, options = {}, &block)
           transfer(:down, from, to, options, &block)
         end
