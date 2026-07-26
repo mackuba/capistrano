@@ -513,24 +513,6 @@ namespace :deploy do
     end
   end
 
-  desc <<-DESC
-    Blank task exists as a hook into which to install your own environment \
-    specific behaviour.
-  DESC
-
-  task :start do
-    # Empty Task to overload with your platform specifics
-  end
-
-  desc <<-DESC
-    Blank task exists as a hook into which to install your own environment \
-    specific behaviour.
-  DESC
-
-  task :stop do
-    # Empty Task to overload with your platform specifics
-  end
-
   namespace :pending do
     desc <<-DESC
       Displays the `diff' since your last deploy. This is useful if you want \

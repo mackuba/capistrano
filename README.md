@@ -20,7 +20,7 @@ Minestrone is a tool for deploying Ruby applications to a server, based on the c
 * legacy SCMs – only `:git` and `:none` are left
 * most deploy strategies – only `:remote_cache` and `:copy` are left
 * maintenance page tasks
-* `deploy:cold` task
+* `deploy:cold`, `deploy:start` and `deploy:stop` tasks
 * any legacy/deprecated code from Capistrano 1.x era or for ancient versions of Ruby or Rails
 
 
