@@ -1,19 +1,32 @@
 # frozen_string_literal: true
 
-$LOAD_PATH.push File.expand_path("lib", __dir__)
-require "minestrone/version"
+require_relative 'lib/minestrone/version'
 
 Gem::Specification.new do |spec|
   spec.name = "minestrone"
   spec.version = Minestrone::Version.to_s
   spec.platform = Gem::Platform::RUBY
   spec.authors = ["Jamis Buck", "Lee Hambley", "Kuba Suder"]
-  spec.homepage = "http://github.com/mackuba/minestrone"
-  spec.summary = "Minestrone - Welcome to easy deployment with Ruby over SSH"
-  spec.description = "Minestrone is a utility and framework for executing commands on a remote machine, via SSH."
+
+  spec.summary = "Simple deployment tool for Ruby apps (based on Capistrano)"
+  spec.description = %(
+    Minestrone is a simplified fork of old Capistrano from before the 3.0 rewrite. It retains most of the old, simpler API,
+    while also removing some more advanced features, and focusing on the relatively simplest but common scenario of a single
+    production server. It also removes a lot of old cruft, support for less commonly used or less recommended things,
+    and modernizes some of the code.
+  )
+
+  spec.homepage = "https://github.com/mackuba/minestrone"
+  spec.license = "MIT"
+
+  spec.metadata = {
+    "bug_tracker_uri"   => "https://github.com/mackuba/minestrone/issues",
+    "changelog_uri"     => "https://github.com/mackuba/minestrone/blob/master/CHANGELOG.md",
+    "source_code_uri"   => "https://github.com/mackuba/minestrone",
+  }
+
   spec.files = `git ls-files`.split("\n")
-  spec.test_files = `git ls-files -- {test,spec,features}/*`.split("\n")
-  spec.executables = `git ls-files -- bin/*`.split("\n").map { |file| File.basename(file) }
+  spec.executables = ['min', 'capify']
   spec.require_paths = ["lib"]
   spec.extra_rdoc_files = [
     "README.md"
