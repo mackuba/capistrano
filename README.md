@@ -19,13 +19,19 @@ Minestrone is a tool for deploying Ruby applications to a server, based on the c
 * REPL shell
 * legacy SCMs – only `:git` and `:none` are left
 * most deploy strategies – only `:remote_cache` and `:copy` are left
-* any legacy/deprecated code from Capistrano 1.x era or for ancient versions of Ruby
+* maintenance page tasks
+* `deploy:cold` task
+* any legacy/deprecated code from Capistrano 1.x era or for ancient versions of Ruby or Rails
 
 
 ### Other API changes
 
 * default deploy path is `/var/www/#{application}`
 * `server` method in the DSL only accepts a single string + options
+* `deploy:cleanup` runs automatically, with 5 last releases
+* `deploy/bundler` recipe handles Bundler integration
+* migration & asset tasks set a `RACK_ENV` instead of `RAILS_ENV` (which Rails also accepts), unless `:rails_env` is explicitly defined
+* added `upload_file` as alias for `upload`
 * Ruby 3.0+ is required
 
 
