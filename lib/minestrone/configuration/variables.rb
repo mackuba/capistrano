@@ -47,6 +47,14 @@ module Minestrone
         @variables.delete(sym)
       end
 
+      def append(variable, *values)
+        set(variable, Array(fetch(variable, [])).concat(values))
+      end
+
+      def remove(variable, *values)
+        set(variable, Array(fetch(variable, [])) - values)
+      end
+
       # Returns true if the variable has been defined, and false otherwise.
       def exists?(variable)
         @variables.key?(variable.to_sym)

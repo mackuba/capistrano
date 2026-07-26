@@ -34,6 +34,7 @@ Minestrone is a tool for deploying Ruby applications to a server, based on the c
 * `deploy/bundler` recipe handles Bundler integration
 * migration & asset tasks set a `RACK_ENV` instead of `RAILS_ENV` (which Rails also accepts), unless `:rails_env` is explicitly defined
 * added `upload_file` as alias for `upload`
+* added `append` and `remove` for adding/removing items from array variables
 * renamed `_cset` to `set_if_empty`
 * Ruby 3.0+ is required
 
