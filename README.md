@@ -28,6 +28,7 @@ Minestrone is a tool for deploying Ruby applications to a server, based on the c
 
 * default deploy path is `/var/www/#{application}`
 * `server` method in the DSL only accepts a single string + options
+* `:use_sudo` is false by default
 * `deploy:cleanup` runs automatically, with 5 last releases
 * `deploy/bundler` recipe handles Bundler integration
 * migration & asset tasks set a `RACK_ENV` instead of `RAILS_ENV` (which Rails also accepts), unless `:rails_env` is explicitly defined

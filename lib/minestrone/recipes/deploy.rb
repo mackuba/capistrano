@@ -69,7 +69,7 @@ _cset(:current_revision)  { capture("#{try_sudo} cat #{current_path}/REVISION").
 _cset(:latest_revision)   { capture("#{try_sudo} cat #{current_release}/REVISION").chomp }
 _cset(:previous_revision) { capture("#{try_sudo} cat #{previous_release}/REVISION").chomp if previous_release }
 
-_cset(:run_method)        { fetch(:use_sudo, true) ? :sudo : :run }
+_cset(:run_method)        { fetch(:use_sudo, false) ? :sudo : :run }
 
 # some tasks, like symlink, need to always point at the latest release, but
 # they can also (occassionally) be called standalone. In the standalone case,
@@ -460,9 +460,7 @@ namespace :deploy do
   desc <<-DESC
     Clean up old releases. By default, the last 5 releases are kept on each \
     server (though you can change this with the keep_releases variable). All \
-    other deployed revisions are removed from the server. By default, this \
-    will use sudo to clean up the old releases, but if sudo is not available \
-    for your environment, set the :use_sudo variable to false instead.
+    other deployed revisions are removed from the server.
   DESC
 
   task :cleanup do
