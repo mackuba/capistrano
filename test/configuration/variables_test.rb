@@ -96,6 +96,60 @@ class ConfigurationVariablesTest < Test::Unit::TestCase
     end
   end
 
+  def test_set_if_empty_should_set_missing_variable
+    @config.set_if_empty :sample, :value
+    assert_equal :value, @config.fetch(:sample)
+  end
+
+  def test_set_if_empty_should_accept_lazy_block
+    @config.set_if_empty(:sample) { :value }
+    assert_instance_of Proc, @config.variables[:sample]
+    assert_equal :value, @config.fetch(:sample)
+  end
+
+  def test_set_if_empty_should_not_replace_existing_false_or_nil
+    @config.set :false_value, false
+    @config.set :nil_value, nil
+
+    @config.set_if_empty :false_value, :replacement
+    replacement_called = false
+    @config.set_if_empty(:nil_value) { replacement_called = true }
+
+    assert_equal false, @config.fetch(:false_value)
+    assert_nil @config.fetch(:nil_value)
+    assert_equal false, replacement_called
+  end
+
+  def test_append_should_add_values_to_missing_or_existing_array
+    @config.append :missing, :one, :two
+    @config.set :existing, [:one]
+    @config.append :existing, :two, :three
+
+    assert_equal [:one, :two], @config.fetch(:missing)
+    assert_equal [:one, :two, :three], @config.fetch(:existing)
+  end
+
+  def test_append_should_wrap_existing_scalar_var_in_array
+    @config.set :sample, :one
+    @config.append :sample, :two
+    assert_equal [:one, :two], @config.fetch(:sample)
+  end
+
+  def test_remove_should_remove_values_from_missing_or_existing_array
+    @config.remove :missing, :one
+    @config.set :existing, [:one, :two, :one, :three]
+    @config.remove :existing, :one, :three
+
+    assert_equal [], @config.fetch(:missing)
+    assert_equal [:two], @config.fetch(:existing)
+  end
+
+  def test_remove_should_wrap_existing_scalar
+    @config.set :sample, :one
+    @config.remove :sample, :two
+    assert_equal [:one], @config.fetch(:sample)
+  end
+
   def test_unset_should_remove_variable_from_hash
     @config.set :sample, :value
     assert @config.variables.key?(:sample)

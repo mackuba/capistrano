@@ -2,7 +2,7 @@
 
 - added `upload_file` as an alias for `upload` (which in deploy tasks is shadowed by the `deploy:upload` task)
 - added `append` & `remove` for adding/removing to array variables (from Capistrano 3)
-- renamed `_cset` to `set_if_empty` and make it a public API (also from Capistrano 3)
+- renamed `_cset` to `set_if_empty` and made it a public API (also from Capistrano 3)
 - in migration and assets tasks, use `RACK_ENV` instead of `RAILS_ENV`, unless `rails_env` is explicitly defined (Rails also accepts `RACK_ENV`, but Sinatra/Rack doesn't accept `RAILS_ENV`)
 - `:use_sudo` is now disabled by default
 - renamed `version_dir` to `releases_dir` for consistency

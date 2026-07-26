@@ -47,6 +47,12 @@ class ConfigurationActionsFileTransferTest < Test::Unit::TestCase
     @config.upload("testl.txt", "testr.txt", :mode => "g+w", :foo => "bar")
   end
 
+  def test_upload_file_should_alias_upload
+    @config.expects(:transfer).with(:up, "testl.txt", "testr.txt", { :foo => "bar" })
+    @config.expects(:run).with("chmod 775 testr.txt", { :foo => "bar" })
+    @config.upload_file("testl.txt", "testr.txt", :mode => 0775, :foo => "bar")
+  end
+
   def test_download_should_delegate_to_transfer
     @config.expects(:transfer).with(:down, "testr.txt", "testl.txt", { :foo => "bar" })
     @config.download("testr.txt", "testl.txt", :foo => "bar")

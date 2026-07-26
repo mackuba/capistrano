@@ -36,6 +36,9 @@ module Minestrone
 
       alias :[]= :set
 
+      # Sets a variable only when it has not already been defined. Existing
+      # values, including nil and false, are preserved. Accepts either a value
+      # or a block, following the same rules as #set.
       def set_if_empty(variable, *args, &block)
         set(variable, *args, &block) unless exists?(variable)
       end
@@ -47,10 +50,16 @@ module Minestrone
         @variables.delete(sym)
       end
 
+      # Appends one or more values to an array variable. Missing variables are
+      # treated as empty arrays, and existing scalar values are wrapped in an
+      # array before the new values are appended.
       def append(variable, *values)
         set(variable, Array(fetch(variable, [])).concat(values))
       end
 
+      # Removes all occurrences of the given values from an array variable.
+      # Missing variables are treated as empty arrays, and existing scalar
+      # values are wrapped in an array before removal.
       def remove(variable, *values)
         set(variable, Array(fetch(variable, [])) - values)
       end
