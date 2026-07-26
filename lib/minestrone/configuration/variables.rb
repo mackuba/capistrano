@@ -36,6 +36,10 @@ module Minestrone
 
       alias :[]= :set
 
+      def set_if_empty(variable, *args, &block)
+        set(variable, *args, &block) unless exists?(variable)
+      end
+
       # Removes any trace of the given variable.
       def unset(variable)
         sym = variable.to_sym

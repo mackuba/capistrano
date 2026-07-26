@@ -4,13 +4,13 @@
 # https://github.com/ruby/rubygems/blob/master/bundler/lib/bundler/minestrone.rb
 # and https://github.com/minestrone/bundler
 
-load 'deploy' unless defined?(_cset)
+load 'deploy' unless defined?(try_sudo)
 
-_cset :bundle_env, ''
-_cset :bundle_cmd, 'bundle'
-_cset(:bundle_path) { "#{shared_path}/bundle" }
-_cset :bundle_without, [:development, :test]
-_cset :bundle_flags, '--quiet'
+set_if_empty :bundle_env, ''
+set_if_empty :bundle_cmd, 'bundle'
+set_if_empty(:bundle_path) { "#{shared_path}/bundle" }
+set_if_empty :bundle_without, [:development, :test]
+set_if_empty :bundle_flags, '--quiet'
 
 set(:rake) { "#{bundle_cmd} exec rake" }
 

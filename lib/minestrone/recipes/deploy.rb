@@ -7,35 +7,29 @@ require "yaml"
 require "minestrone/recipes/deploy/scm"
 require "minestrone/recipes/deploy/strategy"
 
-def _cset(name, *args, &block)
-  unless exists?(name)
-    set(name, *args, &block)
-  end
-end
-
 # =========================================================================
 # These variables MUST be set in the client capfiles. If they are not set,
 # the deploy will fail with an error.
 # =========================================================================
 
-_cset(:application) { abort "Please specify the name of your application, set :application, 'foo'" }
-_cset(:repository)  { abort "Please specify the repository that houses your application's code, set :repository, 'foo'" }
+set_if_empty(:application) { abort "Please specify the name of your application, set :application, 'foo'" }
+set_if_empty(:repository)  { abort "Please specify the repository that houses your application's code, set :repository, 'foo'" }
 
 # =========================================================================
 # These variables may be set in the client capfile if their default values
 # are not sufficient.
 # =========================================================================
 
-_cset(:scm) { scm_default }
-_cset :deploy_via, :remote_cache
+set_if_empty(:scm) { scm_default }
+set_if_empty :deploy_via, :remote_cache
 
-_cset(:deploy_to) { "/var/www/#{application}" }
-_cset(:revision)  { source.head }
+set_if_empty(:deploy_to) { "/var/www/#{application}" }
+set_if_empty(:revision)  { source.head }
 
-_cset :rack_env, "production"
-_cset :rake, "rake"
+set_if_empty :rack_env, "production"
+set_if_empty :rake, "rake"
 
-_cset :keep_releases, 5
+set_if_empty :keep_releases, 5
 
 # =========================================================================
 # These variables should NOT be changed unless you are very confident in
@@ -43,40 +37,40 @@ _cset :keep_releases, 5
 # changes if you do decide to muck with these!
 # =========================================================================
 
-_cset(:source)            { Minestrone::Deploy::SCM.new(scm, self) }
-_cset(:real_revision)     { source.local.query_revision(revision) { |cmd| with_env("LC_ALL", "C") { run_locally(cmd) } } }
+set_if_empty(:source)            { Minestrone::Deploy::SCM.new(scm, self) }
+set_if_empty(:real_revision)     { source.local.query_revision(revision) { |cmd| with_env("LC_ALL", "C") { run_locally(cmd) } } }
 
-_cset(:strategy)          { Minestrone::Deploy::Strategy.new(deploy_via, self) }
+set_if_empty(:strategy)          { Minestrone::Deploy::Strategy.new(deploy_via, self) }
 
 # If overriding release name, please also select an appropriate setting for :releases below.
-_cset(:release_name)      { set :deploy_timestamped, true; Time.now.utc.strftime("%Y%m%d%H%M%S") }
+set_if_empty(:release_name)      { set :deploy_timestamped, true; Time.now.utc.strftime("%Y%m%d%H%M%S") }
 
-_cset :releases_dir,      "releases"
-_cset :shared_dir,        "shared"
-_cset :shared_children,   %w(public/system log tmp/pids)
-_cset :current_dir,       "current"
+set_if_empty :releases_dir,      "releases"
+set_if_empty :shared_dir,        "shared"
+set_if_empty :shared_children,   %w(public/system log tmp/pids)
+set_if_empty :current_dir,       "current"
 
-_cset(:releases_path)     { File.join(deploy_to, releases_dir) }
-_cset(:shared_path)       { File.join(deploy_to, shared_dir) }
-_cset(:current_path)      { File.join(deploy_to, current_dir) }
-_cset(:release_path)      { File.join(releases_path, release_name) }
+set_if_empty(:releases_path)     { File.join(deploy_to, releases_dir) }
+set_if_empty(:shared_path)       { File.join(deploy_to, shared_dir) }
+set_if_empty(:current_path)      { File.join(deploy_to, current_dir) }
+set_if_empty(:release_path)      { File.join(releases_path, release_name) }
 
-_cset(:releases)          { capture("#{try_sudo} ls -x #{releases_path}").split.sort }
-_cset(:current_release)   { releases.length > 0 ? File.join(releases_path, releases.last) : nil }
-_cset(:previous_release)  { releases.length > 1 ? File.join(releases_path, releases[-2]) : nil }
+set_if_empty(:releases)          { capture("#{try_sudo} ls -x #{releases_path}").split.sort }
+set_if_empty(:current_release)   { releases.length > 0 ? File.join(releases_path, releases.last) : nil }
+set_if_empty(:previous_release)  { releases.length > 1 ? File.join(releases_path, releases[-2]) : nil }
 
-_cset(:current_revision)  { capture("#{try_sudo} cat #{current_path}/REVISION").chomp }
-_cset(:latest_revision)   { capture("#{try_sudo} cat #{current_release}/REVISION").chomp }
-_cset(:previous_revision) { capture("#{try_sudo} cat #{previous_release}/REVISION").chomp if previous_release }
+set_if_empty(:current_revision)  { capture("#{try_sudo} cat #{current_path}/REVISION").chomp }
+set_if_empty(:latest_revision)   { capture("#{try_sudo} cat #{current_release}/REVISION").chomp }
+set_if_empty(:previous_revision) { capture("#{try_sudo} cat #{previous_release}/REVISION").chomp if previous_release }
 
-_cset(:run_method)        { fetch(:use_sudo, false) ? :sudo : :run }
+set_if_empty(:run_method)        { fetch(:use_sudo, false) ? :sudo : :run }
 
 # some tasks, like symlink, need to always point at the latest release, but
 # they can also (occassionally) be called standalone. In the standalone case,
 # the timestamped release_path will be inaccurate, since the directory won't
 # actually exist. This variable lets tasks like symlink work either in the
 # standalone case, or during deployment.
-_cset(:latest_release) { exists?(:deploy_timestamped) ? release_path : current_release }
+set_if_empty(:latest_release) { exists?(:deploy_timestamped) ? release_path : current_release }
 
 # =========================================================================
 # These are helper methods that will be available to your recipes.

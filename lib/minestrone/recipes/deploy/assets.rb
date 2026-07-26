@@ -2,13 +2,13 @@
 
 require 'json'
 
-load 'deploy' unless defined?(_cset)
+load 'deploy' unless defined?(try_sudo)
 
-_cset :asset_env, "RAILS_GROUPS=assets"
-_cset :assets_prefix, "assets"
-_cset :shared_assets_prefix, "assets"
-_cset :expire_assets_after, (3600 * 24 * 7)
-_cset(:asset_manifest_prefix) { (`sprockets -v`.chomp < "3.0" ? "manifest" : ".sprockets-manifest") rescue "manifest" }
+set_if_empty :asset_env, "RAILS_GROUPS=assets"
+set_if_empty :assets_prefix, "assets"
+set_if_empty :shared_assets_prefix, "assets"
+set_if_empty :expire_assets_after, (3600 * 24 * 7)
+set_if_empty(:asset_manifest_prefix) { (`sprockets -v`.chomp < "3.0" ? "manifest" : ".sprockets-manifest") rescue "manifest" }
 
 before 'deploy:finalize_update',   'deploy:assets:symlink'
 after  'deploy:update_code',       'deploy:assets:precompile'
