@@ -256,14 +256,9 @@ namespace :deploy do
     task with your own environment's requirements.
 
     This task will make the release group-writable (if the :group_writable \
-    variable is set to true, which is the default). It will then set up \
+    variable is set to true, which is the default) and will set up \
     symlinks to the shared directory for the log, system, and tmp/pids \
-    directories, and will lastly touch all assets in public/images, \
-    public/stylesheets, and public/javascripts so that the times are \
-    consistent (so that asset timestamping works).  This touch process \
-    is only carried out if the :normalize_asset_timestamps variable is \
-    set to true, which is the default. The asset directories can be overridden \
-    using the :public_children variable.
+    directories.
   DESC
 
   task :finalize_update do
@@ -289,18 +284,6 @@ namespace :deploy do
     end
 
     run commands.join(' && ') if commands.any?
-
-    if fetch(:normalize_asset_timestamps, true)
-      stamp = Time.now.utc.strftime("%Y%m%d%H%M.%S")
-
-      asset_paths = fetch(:public_children, %w(images stylesheets javascripts)).
-        map { |p| "#{latest_release}/public/#{p}" }.
-        map { |p| p.shellescape }
-
-      if asset_paths.any?
-        run("find #{asset_paths.join(" ")} -exec touch -t #{stamp} -- {} ';'; true", :env => { "TZ" => "UTC" })
-      end
-    end
   end
 
   desc <<-DESC
