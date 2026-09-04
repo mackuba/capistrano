@@ -23,6 +23,7 @@ Gem::Specification.new do |spec|
     "bug_tracker_uri"   => "https://github.com/mackuba/minestrone/issues",
     "changelog_uri"     => "https://github.com/mackuba/minestrone/blob/master/CHANGELOG.md",
     "source_code_uri"   => "https://github.com/mackuba/minestrone",
+    "rubygems_mfa_required" => "true"
   }
 
   spec.files = `git ls-files`.split("\n")
